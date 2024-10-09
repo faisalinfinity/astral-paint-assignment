@@ -3,11 +3,31 @@ import { GET_HOMEPAGE_DATA } from "@/lib/queries";
 import { Blog, ColourCategory, HomePageData } from "@/lib/types";
 import Image from "next/image";
 
-
+interface seoI {
+  title: string;
+  metaDesc: string;
+  schema: { raw: string };
+  opengraphImage: { mediaItemUrl: string };
+  opengraphUrl: string;
+  opengraphType: string;
+  openGraph: {
+    title: string;
+    description: string;
+    url: string;
+    type: string;
+    images: [
+      {
+        url: string;
+        width: number;
+        height: number;
+      }
+    ];
+  };
+}
 
 export async function generateMetadata() {
   const data: {
-    pages: { nodes: { homepage: HomePageData, seo: any }[] };
+    pages: { nodes: { homepage: HomePageData, seo: seoI }[] };
   } = await client.request(GET_HOMEPAGE_DATA);
 
   const seo = data.pages.nodes[0].seo;
@@ -388,7 +408,7 @@ export default async function Home() {
   );
 }
 
-function NavItem({ children }) {
+function NavItem({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-sm font-semibold text-left capitalize text-white">
       {children}
@@ -449,7 +469,7 @@ function ServiceCard({ title, description, image }: ServiceCardI) {
   );
 }
 
-function ColourCard({ bg, name, code }) {
+function ColourCard({ bg, name, code }: { bg: string, name: string, code: string }) {
   return (
     <div className="group">
       <div className="group-hover:hidden p-3 pt-4 bg-white rounded-t-xl rounded-b-xl">
@@ -491,7 +511,7 @@ function BlogCard({ image, date, title, children }: BlogCardI) {
   );
 }
 
-function FooterColumn({ title, items }) {
+function FooterColumn({ title, items }: { title: string, items: string[] }) {
   return (
     <div>
       <h4 className="text-sm font-bold mb-4 capitalize text-[#eedcb2]">
